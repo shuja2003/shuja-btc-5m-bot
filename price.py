@@ -1,9 +1,25 @@
-import requests
+import os
+import asyncio
+from telegram import Bot
+from price import get_btc_price
 
-def get_btc_price():
-    url = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
-    response = requests.get(url, timeout=10)
-    data = response.json()
+bot = Bot(token=BOT_TOKEN)
 
-    return float(data["price"])
+async def main():
+    btc_price = get_btc_price()
+
+    message = (
+        "₿ Shuja BTC 5M Monitor\n\n"
+        f"BTC Price: ${btc_price:,.2f}\n\n"
+        "Status: Watching 5-minute market..."
+    )
+
+    await bot.send_message(
+        chat_id=CHAT_ID,
+        text=message
+    )
+
+asyncio.run(main())
