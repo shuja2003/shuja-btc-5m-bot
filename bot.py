@@ -2,7 +2,7 @@ import os
 import asyncio
 from telegram import Bot
 from price import get_btc_price
-from signal import get_signal
+from signals import get_signal
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
