@@ -12,26 +12,28 @@ bot = Bot(token=BOT_TOKEN)
 async def main():
     print("Starting BTC 5M bot...")
 
-    start_price = get_btc_price()
-    print("Start price:", start_price)
+    while True:
+        start_price = get_btc_price()
+        print("Start price:", start_price)
 
-    # Test movement (later we will replace this with real 5-minute tracking)
-    current_price = get_btc_price()
+        await asyncio.sleep(30)  # Test with 30 seconds first
 
-    signal, change = get_signal(start_price, current_price)
+        current_price = get_btc_price()
 
-    message = (
-        "₿ Shuja BTC 5M Signal\n\n"
-        f"BTC Price: ${current_price:,.2f}\n"
-        f"Change: {change:.4f}%\n\n"
-        f"Signal: {signal}"
-    )
+        signal, change = get_signal(start_price, current_price)
 
-    await bot.send_message(
-        chat_id=CHAT_ID,
-        text=message
-    )
+        message = (
+            "₿ Shuja BTC 5M Signal\n\n"
+            f"BTC Price: ${current_price:,.2f}\n"
+            f"Change: {change:.4f}%\n\n"
+            f"Signal: {signal}"
+        )
 
-    print("Signal sent!")
+        await bot.send_message(
+            chat_id=CHAT_ID,
+            text=message
+        )
+
+        print("Signal sent!")
 
 asyncio.run(main())
