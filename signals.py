@@ -1,10 +1,10 @@
 def get_signal(start_price, current_price):
     change = ((current_price - start_price) / start_price) * 100
 
-    if change >= 0.02:
-        signal = "🟢 BUY"
-    elif change <= -0.02:
-        signal = "🔴 SELL"
+    if change >= 0.04:
+        signal = "🟢 BUY UP"
+    elif change <= -0.04:
+        signal = "🔴 BUY DOWN"
     else:
         signal = "⏳ WAIT"
 
