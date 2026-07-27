@@ -2,6 +2,10 @@ name: Shuja BTC 5M Bot
 
 on:
   workflow_dispatch:
+
+  schedule:
+    - cron: "*/5 * * * *"
+
   push:
     branches:
       - main
@@ -19,7 +23,8 @@ jobs:
 
       - run: pip install python-telegram-bot requests
 
-      - run: python bot.py
+      - name: Run Bot
+        run: python bot.py
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
