@@ -30,8 +30,8 @@ async def main():
             start_price = get_btc_price()
             print(f"New candle started: {start_price}")
 
-            # Wait until last 40 seconds of candle
-            wait_time = candle_end - int(time.time()) - 40
+            # Wait until last 60 seconds of candle
+wait_time = candle_end - int(time.time()) - 60
 
             if wait_time > 0:
                 await asyncio.sleep(wait_time)
