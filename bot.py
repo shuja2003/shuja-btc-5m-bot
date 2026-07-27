@@ -1,4 +1,4 @@
-import os
+noimport os
 import asyncio
 import time
 from telegram import Bot
@@ -40,9 +40,11 @@ async def main():
 
             signal, change = get_signal(start_price, current_price)
 
-            message = (
+                        message = (
                 "₿ Shuja BTC 5M Signal\n\n"
                 f"Start: ${start_price:,.2f}\n"
                 f"Current: ${current_price:,.2f}\n"
                 f"Change: {change:.4f}%\n\n"
-                f"Signal: {
+                f"Signal: {signal}\n"
+                "⏱ 60 seconds before candle close"
+                        )
