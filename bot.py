@@ -14,48 +14,40 @@ bot = Bot(token=BOT_TOKEN)
 async def main():
     print("Starting BTC 5M bot...")
 
-    last_candle = None
+    now = int(time.time())
 
-    while True:
-        now = int(time.time())
+    # Current 5-minute candle
+    candle_start = now - (now % 300)
+    candle_end = candle_start + 300
 
-        # Binance 5-minute candle alignment
-        candle_start = now - (now % 300)
-        candle_end = candle_start + 300
+    start_price = get_btc_price()
+    print(f"Start price: {start_price}")
 
-        if candle_start != last_candle:
-            last_candle = candle_start
+    # Wait until 60 seconds before candle close
+    wait_time = candle_end - int(time.time()) - 60
 
-            start_price = get_btc_price()
-            print(f"New candle started: {start_price}")
+    if wait_time > 0:
+        print(f"Waiting {wait_time} seconds...")
+        await asyncio.sleep(wait_time)
 
-            # Wait until last 60 seconds of candle
-            wait_time = candle_end - int(time.time()) - 60
+    current_price = get_btc_price()
 
-            if wait_time > 0:
-                await asyncio.sleep(wait_time)
+    signal, change = get_signal(start_price, current_price)
 
-            current_price = get_btc_price()
+    message = (
+        "₿ Shuja BTC 5M Signal\n\n"
+        f"Start: ${start_price:,.2f}\n"
+        f"Current: ${current_price:,.2f}\n"
+        f"Change: {change:.4f}%\n\n"
+        f"Signal: {signal}\n"
+        "⏱ 60 seconds before candle close"
+    )
 
-            signal, change = get_signal(start_price, current_price)
+    await bot.send_message(
+        chat_id=CHAT_ID,
+        text=message
+    )
 
-            message = (
-                "₿ Shuja BTC 5M Signal\n\n"
-                f"Start: ${start_price:,.2f}\n"
-                f"Current: ${current_price:,.2f}\n"
-                f"Change: {change:.4f}%\n\n"
-                f"Signal: {signal}\n"
-                "⏱ 60 seconds before candle close"
-            )
-
-            await bot.send_message(
-                chat_id=CHAT_ID,
-                text=message
-            )
-
-            print("Signal sent!")
-
-        await asyncio.sleep(5)
-
+    print("Signal sent!")
 
 asyncio.run(main())
