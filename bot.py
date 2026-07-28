@@ -30,7 +30,7 @@ async def run_bot():
 
         seconds_left = candle_end - now
 
-        if seconds_left == 60:
+        if seconds_left <= 60 and seconds_left > 59:
             current_price = get_btc_price()
 
             signal, change = get_signal(
@@ -54,7 +54,7 @@ async def run_bot():
 
             print("Signal sent!")
 
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.5)
 
 
 asyncio.run(run_bot())
