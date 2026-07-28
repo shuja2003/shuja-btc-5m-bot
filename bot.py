@@ -1,8 +1,12 @@
 import os
 import asyncio
-import time
 from telegram import Bot
-from price import get_btc_price, get_candle_open_price
+
+from price import (
+    get_btc_price,
+    get_candle_open_price,
+    get_binance_time,
+)
 from signals import get_signal
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -19,12 +23,11 @@ async def run_bot():
     start_price = None
 
     while True:
-        now = int(time.time())
+        now = get_binance_time()
 
         candle_start = now - (now % 300)
         candle_end = candle_start + 300
 
-        # New 5-minute candle
         if last_candle != candle_start:
             last_candle = candle_start
             sent_signal = False
@@ -34,15 +37,10 @@ async def run_bot():
 
         seconds_left = candle_end - now
 
-        # Send signal around 60 seconds before candle close
-        if seconds_left <= 61 and seconds_left >= 59 and not sent_signal:
-
+        if 59 <= seconds_left <= 61 and not sent_signal:
             current_price = get_btc_price()
 
-            signal, change = get_signal(
-                start_price,
-                current_price
-            )
+            signal, change = get_signal(start_price, current_price)
 
             message = (
                 "₿ Shuja BTC 5M Signal\n\n"
@@ -55,10 +53,9 @@ async def run_bot():
 
             print(f"Sending signal. Seconds left: {seconds_left}")
 
-await bot.send_message(
-    chat_id=CHAT_ID,
-    text=message
-    
+            await bot.send_message(
+                chat_id=CHAT_ID,
+                text=message,
             )
 
             sent_signal = True
