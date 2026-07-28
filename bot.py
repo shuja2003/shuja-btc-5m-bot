@@ -15,6 +15,8 @@ async def run_bot():
     print("Starting BTC 5M continuous bot...")
 
     last_candle = None
+    sent_signal = False
+    start_price = None
 
     while True:
         now = int(time.time())
@@ -22,15 +24,19 @@ async def run_bot():
         candle_start = now - (now % 300)
         candle_end = candle_start + 300
 
+        # New 5-minute candle
         if last_candle != candle_start:
             last_candle = candle_start
+            sent_signal = False
 
             start_price = get_candle_open_price()
-            print(f"New candle: {start_price}")
+            print(f"New candle start price: {start_price}")
 
         seconds_left = candle_end - now
 
-        if seconds_left <= 60 and seconds_left > 59:
+        # Send signal around 60 seconds before candle close
+        if seconds_left <= 61 and seconds_left >= 59 and not sent_signal:
+
             current_price = get_btc_price()
 
             signal, change = get_signal(
@@ -52,6 +58,7 @@ async def run_bot():
                 text=message
             )
 
+            sent_signal = True
             print("Signal sent!")
 
         await asyncio.sleep(0.5)
