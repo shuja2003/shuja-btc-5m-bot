@@ -53,7 +53,7 @@ async def main():
 async def run_bot():
     while True:
         await main()
-        await asyncio.sleep(5)
+        await asyncio.sleep(300)
 
 
 asyncio.run(run_bot())
