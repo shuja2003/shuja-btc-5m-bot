@@ -53,9 +53,12 @@ async def run_bot():
                 "⏱ 60 seconds before candle close"
             )
 
-            await bot.send_message(
-                chat_id=CHAT_ID,
-                text=message
+            print(f"Sending signal. Seconds left: {seconds_left}")
+
+await bot.send_message(
+    chat_id=CHAT_ID,
+    text=message
+    
             )
 
             sent_signal = True
