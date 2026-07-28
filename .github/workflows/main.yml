@@ -7,8 +7,8 @@ on:
     - cron: "*/5 * * * *"
 
   push:
-  branches:
-    - main
+    branches:
+      - main
 
 concurrency:
   group: shuja-btc-5m-bot
