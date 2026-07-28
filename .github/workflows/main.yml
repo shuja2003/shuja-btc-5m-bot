@@ -7,9 +7,10 @@ on:
     - cron: "*/5 * * * *"
 
   push:
-    branches:
-      - main
-      concurrency:
+  branches:
+    - main
+
+concurrency:
   group: shuja-btc-5m-bot
   cancel-in-progress: true
 
