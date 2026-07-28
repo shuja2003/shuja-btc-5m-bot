@@ -1,5 +1,4 @@
 import requests
-import time
 
 
 def get_btc_price():
@@ -17,6 +16,13 @@ def get_candle_open_price():
     response = requests.get(url, timeout=10)
     data = response.json()
 
-    candle_open = float(data[0][1])
+    return float(data[0][1])
 
-    return candle_open
+
+def get_binance_time():
+    url = "https://data-api.binance.vision/api/v3/time"
+
+    response = requests.get(url, timeout=10)
+    data = response.json()
+
+    return int(data["serverTime"] / 1000)
