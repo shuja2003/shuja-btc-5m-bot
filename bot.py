@@ -50,4 +50,10 @@ async def main():
 
     print("Signal sent!")
 
-asyncio.run(main())
+async def run_bot():
+    while True:
+        await main()
+        await asyncio.sleep(5)
+
+
+asyncio.run(run_bot())
