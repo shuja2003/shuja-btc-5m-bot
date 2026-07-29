@@ -59,7 +59,7 @@ async def run_bot():
 
     last_candle = None
 
-    while True:
+    for i in range(1):
 
         now = get_binance_time()
 
