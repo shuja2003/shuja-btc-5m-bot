@@ -37,7 +37,7 @@ async def run_bot():
             start_price = get_candle_open_price()
             print(f"New candle start price: {start_price}")
 
-        seconds_left = candle_end - now
+        seconds_left = candle_end - now print(f"Seconds left: {seconds_left}, checked={checked_times}")
 
         for checkpoint in [90, 60, 30]:
 
