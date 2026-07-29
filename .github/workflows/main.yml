@@ -21,7 +21,7 @@ jobs:
       - run: pip install python-telegram-bot requests
 
       - name: Run Bot
-        run: python bot.py
+        run: python -u bot.py
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }} 
