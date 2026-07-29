@@ -19,8 +19,9 @@ async def run_bot():
     print("Starting BTC 5M continuous bot...")
 
     last_candle = None
-    sent_signal = False
+    checked_times = set()
     start_price = None
+    previous_signal = None
 
     while True:
         now = get_binance_time()
@@ -30,36 +31,48 @@ async def run_bot():
 
         if last_candle != candle_start:
             last_candle = candle_start
-            sent_signal = False
+            checked_times = set()
+            previous_signal = None
 
             start_price = get_candle_open_price()
             print(f"New candle start price: {start_price}")
 
         seconds_left = candle_end - now
 
-        if 59 <= seconds_left <= 61 and not sent_signal:
-            current_price = get_btc_price()
+        for checkpoint in [90, 60, 30]:
 
-            signal, change = get_signal(start_price, current_price)
+            if checkpoint - 1 <= seconds_left <= checkpoint + 1:
+                if checkpoint not in checked_times:
 
-            message = (
-                "₿ Shuja BTC 5M Signal\n\n"
-                f"Start: ${start_price:,.2f}\n"
-                f"Current: ${current_price:,.2f}\n"
-                f"Change: {change:.4f}%\n\n"
-                f"Signal: {signal}\n"
-                "⏱ 60 seconds before candle close"
-            )
+                    current_price = get_btc_price()
 
-            print(f"Sending signal. Seconds left: {seconds_left}")
+                    signal, change, reversal = get_signal(
+                        start_price,
+                        current_price,
+                        previous_signal
+                    )
 
-            await bot.send_message(
-                chat_id=CHAT_ID,
-                text=message,
-            )
+                    message = (
+                        "₿ Shuja BTC 5M Signal\n\n"
+                        f"Time left: {checkpoint} seconds\n\n"
+                        f"Start: ${start_price:,.2f}\n"
+                        f"Current: ${current_price:,.2f}\n"
+                        f"Change: {change:.4f}%\n\n"
+                        f"Signal: {signal}"
+                    )
 
-            sent_signal = True
-            print("Signal sent!")
+                    if reversal:
+                        message += f"\n\n{reversal}"
+
+                    await bot.send_message(
+                        chat_id=CHAT_ID,
+                        text=message
+                    )
+
+                    print(message)
+
+                    previous_signal = signal
+                    checked_times.add(checkpoint)
 
         await asyncio.sleep(0.5)
 
