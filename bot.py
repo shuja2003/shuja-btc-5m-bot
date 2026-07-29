@@ -41,8 +41,7 @@ async def run_bot():
 
         for checkpoint in [90, 60, 30]:
 
-            if checkpoint - 1 <= seconds_left <= checkpoint + 1:
-                if checkpoint not in checked_times:
+            if seconds_left <= checkpoint and checkpoint not in checked_times:
 
                     current_price = get_btc_price()
 
