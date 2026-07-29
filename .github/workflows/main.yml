@@ -3,13 +3,6 @@ name: Shuja BTC 5M Bot
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "*/5 * * * *"
-
-  push:
-    branches:
-      - main
-
 concurrency:
   group: shuja-btc-5m-bot
   cancel-in-progress: true
