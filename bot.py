@@ -7,7 +7,9 @@ from price import (
     get_candle_open_price,
     get_binance_time,
 )
+
 from signals import get_signal
+
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
@@ -55,17 +57,18 @@ async def run_bot():
     start_price = None
 
     while True:
-    print("LOOP START")
 
-    now = get_binance_time()
-    print("TIME:", now) 
+        now = get_binance_time()
 
         candle_start = now - (now % 300)
         candle_end = candle_start + 300
 
         if candle_start != last_candle:
+
             last_candle = candle_start
+
             start_price = get_candle_open_price()
+
             sent = set()
             previous_signal = None
 
@@ -74,8 +77,10 @@ async def run_bot():
         seconds_left = candle_end - now
 
         print(f"Seconds left: {seconds_left}")
+        print("Bot is alive...")
 
         for checkpoint in [90, 60, 30]:
+
             if seconds_left <= checkpoint and checkpoint not in sent:
 
                 print(f"Sending {checkpoint}s signal")
@@ -93,6 +98,7 @@ async def run_bot():
 
 try:
     asyncio.run(run_bot())
+
 except Exception as e:
     print("ERROR:", e)
     raise
