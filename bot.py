@@ -51,33 +51,23 @@ async def send_signal(checkpoint, start_price, previous_signal):
 async def run_bot():
     print("Starting Shuja BTC 5M Bot")
 
-    last_candle = None
+    now = get_binance_time()
+
+    candle_start = now - (now % 300)
+    candle_end = candle_start + 300
+
+    start_price = get_candle_open_price()
+
+    print(f"New candle: {start_price}")
+
     sent = set()
     previous_signal = None
-    start_price = None
 
     while True:
-
         now = get_binance_time()
-
-        candle_start = now - (now % 300)
-        candle_end = candle_start + 300
-
-        if candle_start != last_candle:
-
-            last_candle = candle_start
-
-            start_price = get_candle_open_price()
-
-            sent = set()
-            previous_signal = None
-
-            print(f"New candle: {start_price}")
-
         seconds_left = candle_end - now
 
         print(f"Seconds left: {seconds_left}")
-        print("Bot is alive...")
 
         for checkpoint in [90, 60, 30]:
 
@@ -92,6 +82,11 @@ async def run_bot():
                 )
 
                 sent.add(checkpoint)
+
+        # Stop after the candle has finished
+        if seconds_left <= 0:
+            print("5-minute candle finished.")
+            break
 
         await asyncio.sleep(1)
 
