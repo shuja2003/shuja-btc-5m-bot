@@ -1,31 +1,31 @@
 name: Shuja BTC 5M Bot
 
 on:
-push:
-branches:
-- main
-workflow_dispatch:
-schedule:
-- cron: "*/5 * * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
 
 jobs:
-run-bot:
-runs-on: ubuntu-latest
+  run-bot:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Setup Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: "3.11"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-  - name: Install dependencies
-    run: pip install python-telegram-bot requests
+      - name: Install dependencies
+        run: pip install python-telegram-bot requests
 
-  - name: Run Bot
-    run: python -u bot.py
-    env:
-      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-      CHAT_ID: ${{ secrets.CHAT_ID }}
+      - name: Run Bot
+        run: python -u bot.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
