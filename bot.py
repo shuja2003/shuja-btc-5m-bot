@@ -60,8 +60,8 @@ async def run_bot():
 
     print(f"New candle: {start_price}")
 
-    sent = set()
     previous_signal = None
+    sent = set()
 
     while True:
         now = get_binance_time()
@@ -70,7 +70,6 @@ async def run_bot():
         print(f"Seconds left: {seconds_left}")
 
         for checkpoint in [90, 60, 30]:
-
             if seconds_left <= checkpoint and checkpoint not in sent:
 
                 print(f"Sending {checkpoint}s signal")
@@ -83,7 +82,6 @@ async def run_bot():
 
                 sent.add(checkpoint)
 
-        # Stop after the candle has finished
         if seconds_left <= 0:
             print("5-minute candle finished.")
             break
