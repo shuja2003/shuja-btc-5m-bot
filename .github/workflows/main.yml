@@ -1,6 +1,10 @@
 name: Shuja BTC 5M Bot
 
 on:
+  push:
+    branches:
+      - main
+
   workflow_dispatch:
 
   schedule:
