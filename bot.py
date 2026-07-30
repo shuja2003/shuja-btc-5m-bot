@@ -89,4 +89,8 @@ async def run_bot():
         await asyncio.sleep(1)
 
 
-asyncio.run(run_bot())
+try:
+    asyncio.run(run_bot())
+except Exception as e:
+    print("ERROR:", e)
+    raise
