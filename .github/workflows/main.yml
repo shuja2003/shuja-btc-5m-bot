@@ -4,9 +4,7 @@ on:
 push:
 branches:
 - main
-
 workflow_dispatch:
-
 schedule:
 - cron: "*/5 * * * *"
 
@@ -24,8 +22,7 @@ steps:
       python-version: "3.11"
 
   - name: Install dependencies
-    run: |
-      pip install python-telegram-bot requests
+    run: pip install python-telegram-bot requests
 
   - name: Run Bot
     run: python -u bot.py
