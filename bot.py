@@ -55,8 +55,10 @@ async def run_bot():
     start_price = None
 
     while True:
+    print("LOOP START")
 
-        now = get_binance_time()
+    now = get_binance_time()
+    print("TIME:", now)
 
         candle_start = now - (now % 300)
         candle_end = candle_start + 300
