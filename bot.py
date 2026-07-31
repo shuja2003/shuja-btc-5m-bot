@@ -7,6 +7,7 @@ from price import (
     get_btc_price,
     get_candle_open_price,
     get_binance_time,
+    get_trend,
 )
 
 from signals import get_signal
@@ -30,10 +31,12 @@ bot = Bot(
 
 async def send_signal(checkpoint, start_price, previous_signal):
     current_price = get_btc_price()
+    trend = get_trend()
 
     signal, change, reversal = get_signal(
         start_price,
         current_price,
+        trend,
         previous_signal
     )
 
@@ -42,6 +45,7 @@ async def send_signal(checkpoint, start_price, previous_signal):
         f"Time left: {checkpoint} seconds\n\n"
         f"Start: ${start_price:,.2f}\n"
         f"Current: ${current_price:,.2f}\n"
+        f"Trend: {trend}\n"
         f"Change: {change:.4f}%\n\n"
         f"Signal: {signal}"
     )
@@ -80,7 +84,6 @@ async def send_signal(checkpoint, start_price, previous_signal):
             flush=True
         )
 
-        # Keep the bot alive even if Telegram temporarily fails.
         print(
             f"Continuing bot after {checkpoint}s send failure.",
             flush=True
