@@ -29,7 +29,30 @@ bot = Bot(
 )
 
 
-async def send_signal(start_price):
+async def send_countdown(start_price, time_left):
+    current_price = get_btc_price()
+    trend = get_trend()
+
+    message = (
+        "₿ Shuja BTC 5M Signal\n\n"
+        f"Time left: {time_left} seconds\n\n"
+        f"Current: ${current_price:,.2f}\n"
+        f"Trend: {trend}\n\n"
+        "Preparing final signal..."
+    )
+
+    result = await asyncio.wait_for(
+        bot.send_message(
+            chat_id=CHAT_ID,
+            text=message,
+        ),
+        timeout=10,
+    )
+
+    print(f"{time_left}s alert sent. ID: {result.message_id}", flush=True)
+
+
+async def send_final_signal(start_price):
     current_price = get_btc_price()
     trend = get_trend()
 
@@ -37,12 +60,12 @@ async def send_signal(start_price):
         start_price,
         current_price,
         trend,
-        None
+        None,
     )
 
     message = (
         "₿ Shuja BTC 5M Signal\n\n"
-        "Time left: 60 seconds\n\n"
+        "Time left: 30 seconds\n\n"
         f"Start: ${start_price:,.2f}\n"
         f"Current: ${current_price:,.2f}\n"
         f"Trend: {trend}\n"
@@ -53,12 +76,12 @@ async def send_signal(start_price):
     result = await asyncio.wait_for(
         bot.send_message(
             chat_id=CHAT_ID,
-            text=message
+            text=message,
         ),
-        timeout=10
+        timeout=10,
     )
 
-    print(f"Telegram sent. ID: {result.message_id}", flush=True)
+    print(f"30s signal sent. ID: {result.message_id}", flush=True)
     print(message, flush=True)
 
 
@@ -74,24 +97,29 @@ async def run_bot():
 
     seconds_left = candle_end - now
 
-    print(
-        f"Seconds left: {seconds_left}",
-        flush=True
-    )
+    print(f"Seconds left: {seconds_left}", flush=True)
 
-    wait_time = seconds_left - 60
+    checkpoints = [120, 60, 30]
+    previous = seconds_left
 
-    if wait_time > 0:
-        print(
-            f"Waiting {wait_time} seconds...",
-            flush=True
-        )
-        await asyncio.sleep(wait_time)
+    for checkpoint in checkpoints:
+        wait_time = previous - checkpoint
 
-    await send_signal(start_price)
+        if wait_time > 0:
+            print(f"Waiting {wait_time} seconds...", flush=True)
+            await asyncio.sleep(wait_time)
+
+        if checkpoint == 30:
+            await send_final_signal(start_price)
+        else:
+            await send_countdown(start_price, checkpoint)
+
+        previous = checkpoint
 
     print("Run completed.", flush=True)
 
 
 if __name__ == "__main__":
     asyncio.run(run_bot())
+
+    
