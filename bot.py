@@ -29,20 +29,20 @@ bot = Bot(
 )
 
 
-async def send_signal(checkpoint, start_price, previous_signal):
+async def send_signal(start_price):
     current_price = get_btc_price()
     trend = get_trend()
 
-    signal, change, reversal = get_signal(
+    signal, change, _ = get_signal(
         start_price,
         current_price,
         trend,
-        previous_signal
+        None
     )
 
     message = (
         "₿ Shuja BTC 5M Signal\n\n"
-        f"Time left: {checkpoint} seconds\n\n"
+        "Time left: 60 seconds\n\n"
         f"Start: ${start_price:,.2f}\n"
         f"Current: ${current_price:,.2f}\n"
         f"Trend: {trend}\n"
@@ -50,86 +50,47 @@ async def send_signal(checkpoint, start_price, previous_signal):
         f"Signal: {signal}"
     )
 
-    if reversal:
-        message += f"\n\n{reversal}"
+    result = await asyncio.wait_for(
+        bot.send_message(
+            chat_id=CHAT_ID,
+            text=message
+        ),
+        timeout=10
+    )
 
-    try:
-        result = await asyncio.wait_for(
-            bot.send_message(
-                chat_id=CHAT_ID,
-                text=message
-            ),
-            timeout=10
-        )
-
-        print(
-            f"Telegram sent. ID: {result.message_id}",
-            flush=True
-        )
-
-        print(message, flush=True)
-
-        return signal
-
-    except Exception as e:
-        print(
-            f"Telegram error: {type(e).__name__}: {e}",
-            flush=True
-        )
-
-        return previous_signal
+    print(f"Telegram sent. ID: {result.message_id}", flush=True)
+    print(message, flush=True)
 
 
 async def run_bot():
     print("Starting Shuja BTC 5M Bot", flush=True)
 
-    previous_signal = None
+    now = get_binance_time()
 
-    while True:
-        now = get_binance_time()
+    candle_start = now - (now % 300)
+    candle_end = candle_start + 300
 
-        candle_start = now - (now % 300)
-        candle_end = candle_start + 300
+    start_price = get_candle_open_price()
 
-        start_price = get_candle_open_price()
+    seconds_left = candle_end - now
 
+    print(
+        f"Seconds left: {seconds_left}",
+        flush=True
+    )
+
+    wait_time = seconds_left - 60
+
+    if wait_time > 0:
         print(
-            f"New candle start: {start_price}",
+            f"Waiting {wait_time} seconds...",
             flush=True
         )
+        await asyncio.sleep(wait_time)
 
-        sent = set()
+    await send_signal(start_price)
 
-        while True:
-            now = get_binance_time()
-            seconds_left = candle_end - now
-
-            print(
-                f"Seconds left: {seconds_left}",
-                flush=True
-            )
-
-            for checkpoint in [90, 60, 30]:
-                if (
-                    seconds_left <= checkpoint
-                    and checkpoint not in sent
-                ):
-                    previous_signal = await send_signal(
-                        checkpoint,
-                        start_price,
-                        previous_signal
-                    )
-
-                    sent.add(checkpoint)
-
-            if seconds_left <= 0:
-                print(
-                    "Candle finished. Starting next candle.",
-                    flush=True
-                )
-                break
-
-            await asyncio.sleep(1)
+    print("Run completed.", flush=True)
 
 
 if __name__ == "__main__":
