@@ -1,4 +1,4 @@
-name: Shuja BTC 5M Bot
+name: Shuja BTC 5M Bot v2
 
 on:
   workflow_dispatch:
