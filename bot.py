@@ -34,11 +34,12 @@ async def send_countdown(start_price, time_left):
     trend = get_trend()
 
     message = (
-        "₿ Shuja BTC 5M Signal\n\n"
-        f"Time left: {time_left} seconds\n\n"
-        f"Current: ${current_price:,.2f}\n"
-        f"Trend: {trend}\n\n"
-        "Preparing final signal..."
+    "₿ Shuja BTC 5M Signal\n\n"
+    f"Time left: {time_left} seconds\n\n"
+    f"Start: ${start_price:,.2f}\n"
+    f"Current: ${current_price:,.2f}\n"
+    f"Trend: {trend}\n\n"
+    "Preparing final signal..."
     )
 
     result = await asyncio.wait_for(
