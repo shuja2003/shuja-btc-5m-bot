@@ -1,3 +1,7 @@
+import asyncio
+from telegram import Bot
+import os
+import requests
 async def run_bot():
     print("Starting Shuja BTC 5M Bot 24/7", flush=True)
 
