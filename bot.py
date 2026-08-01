@@ -86,7 +86,8 @@ async def send_final_signal(start_price):
     print(message, flush=True)
 
 
-async def run_bot():
+if __name__ == "__main__":
+    asyncio.run(run_bot())
     print("Starting Shuja BTC 5M Bot 24/7", flush=True)
 
     while True:
