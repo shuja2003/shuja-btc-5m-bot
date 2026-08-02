@@ -100,7 +100,7 @@ async def run_bot():
 
     print(f"Seconds left: {seconds_left}", flush=True)
 
-    checkpoints = [120, 60, 30]
+    checkpoints = [150, 120, 90, 60, 30]
     previous = seconds_left
 
     for checkpoint in checkpoints:
