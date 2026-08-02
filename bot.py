@@ -95,27 +95,26 @@ async def run_bot():
     candle_end = candle_start + 300
 
     start_price = get_candle_open_price()
-
     seconds_left = candle_end - now
 
     print(f"Seconds left: {seconds_left}", flush=True)
 
     checkpoints = [150, 120, 90, 60, 30]
 
-for checkpoint in checkpoints:
-    if seconds_left <= checkpoint:
-        continue
+    for checkpoint in checkpoints:
+        if seconds_left <= checkpoint:
+            continue
 
-    wait_time = seconds_left - checkpoint
+        wait_time = seconds_left - checkpoint
 
-    if wait_time > 0:
-        print(f"Waiting {wait_time} seconds...", flush=True)
-        await asyncio.sleep(wait_time)
+        if wait_time > 0:
+            print(f"Waiting {wait_time} seconds...", flush=True)
+            await asyncio.sleep(wait_time)
 
-    if checkpoint == 30:
-        await send_final_signal(start_price)
-    else:
-        await send_countdown(start_price, checkpoint)
+        if checkpoint == 30:
+            await send_final_signal(start_price)
+        else:
+            await send_countdown(start_price, checkpoint)
 
         previous = checkpoint
 
