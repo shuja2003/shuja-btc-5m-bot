@@ -104,7 +104,10 @@ async def run_bot():
     previous = seconds_left
 
     for checkpoint in checkpoints:
-        wait_time = previous - checkpoint
+    if seconds_left <= checkpoint:
+        continue
+
+    wait_time = previous - checkpoint
 
         if wait_time > 0:
             print(f"Waiting {wait_time} seconds...", flush=True)
