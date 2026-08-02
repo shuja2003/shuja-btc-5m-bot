@@ -103,14 +103,22 @@ async def run_bot():
 
             print(f"Seconds left: {seconds_left}", flush=True)
 
-                                    checkpoints = 
-                                        [120, 60, 30]
+                                                checkpoints = [120, 60, 30]
+            previous = seconds_left
 
-            for checkpoint in
-            checkpoints:
-                if
-                seconds_left > checkpoint:
-                    wait_time = seconds_left - checkpoint
+            for checkpoint in checkpoints:
+                wait_time = previous - checkpoint
+
+                if wait_time > 0:
+                    print(f"Waiting {wait_time} seconds...", flush=True)
+                    await asyncio.sleep(wait_time)
+
+                if checkpoint == 30:
+                    await send_final_signal(start_price)
+                else:
+                    await send_countdown(start_price, checkpoint)
+
+                previous = checkpoint
 
                     if
                     wait_time > 0:
