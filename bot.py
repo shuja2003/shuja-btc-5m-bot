@@ -97,7 +97,7 @@ async def run_bot():
 
         start_price = get_candle_open_price()
 
-        checkpoints = [270, 240, 210, 180, 150, 120, 90, 60, 30]
+        checkpoints = [270, 240, 210, 180, 150, 120, 90, 60]
 
         for checkpoint in checkpoints:
             while True:
@@ -111,8 +111,8 @@ async def run_bot():
 
                 await asyncio.sleep(5)
 
-            if checkpoint == 30:
-                await send_final_signal(start_price)
+            if checkpoint == 60:
+    await send_final_signal(start_price)
             else:
                 await send_countdown(start_price, checkpoint)
 
