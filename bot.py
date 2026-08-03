@@ -99,16 +99,18 @@ async def run_bot():
     checkpoints = [270, 240, 210, 180, 150, 120, 90, 60, 30]
 
     for checkpoint in checkpoints:
-        while True:
-            now = get_binance_time()
-            seconds_left = candle_end - now
+    now = get_binance_time()
+    seconds_left = candle_end - now
 
-            print(f"Seconds left: {seconds_left}", flush=True)
+    if seconds_left < checkpoint:
+        continue
 
-            if seconds_left <= checkpoint:
-                break
+    while seconds_left > checkpoint:
+        await asyncio.sleep(5)
+        now = get_binance_time()
+        seconds_left = candle_end - now
 
-            await asyncio.sleep(5)
+    print(f"Seconds left: {seconds_left}", flush=True)
 
         if checkpoint == 30:
             await send_final_signal(start_price)
