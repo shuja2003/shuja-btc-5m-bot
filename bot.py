@@ -82,6 +82,7 @@ async def send_final_signal(start_price):
     )
 
     print(f"40s signal sent. ID: {result.message_id}", flush=True)
+    print(message, flush=True)
 
 
 async def run_bot():
@@ -111,9 +112,9 @@ async def run_bot():
                 await asyncio.sleep(5)
 
             if checkpoint == 40:
-    await send_final_signal(start_price)
-else:
-    await send_countdown(start_price, checkpoint)
+                await send_final_signal(start_price)
+            else:
+                await send_countdown(start_price, checkpoint)
 
         print("Candle completed. Waiting for next candle...", flush=True)
 
