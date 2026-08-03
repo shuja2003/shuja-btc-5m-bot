@@ -100,23 +100,23 @@ async def run_bot():
         checkpoints = [270, 240, 210, 180, 150, 120, 90, 60]
 
         for checkpoint in checkpoints:
-            while True:
-                now = get_binance_time()
-                seconds_left = candle_end - now
+    while True:
+        now = get_binance_time()
+        seconds_left = candle_end - now
 
-                print(f"Seconds left: {seconds_left}", flush=True)
+        print(f"Seconds left: {seconds_left}", flush=True)
 
-                if seconds_left <= checkpoint:
-                    break
+        if seconds_left <= checkpoint:
+            break
 
-                await asyncio.sleep(5)
+        await asyncio.sleep(5)
 
-                    if checkpoint == 60:
-            await send_final_signal(start_price)
-        else:
-            await send_countdown(start_price, checkpoint)
+    if checkpoint == 60:
+        await send_final_signal(start_price)
+    else:
+        await send_countdown(start_price, checkpoint)
 
-    print("Candle completed. Waiting for next candle...", flush=True)
+print("Candle completed. Waiting for next candle...", flush=True)
 
 
 if __name__ == "__main__":
