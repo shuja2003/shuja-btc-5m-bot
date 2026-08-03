@@ -65,7 +65,7 @@ async def send_final_signal(start_price):
 
     message = (
         "₿ Shuja BTC 5M Signal\n\n"
-        "Time left: 60 seconds\n\n"
+        "Time left: 40 seconds\n\n"
         f"Start: ${start_price:,.2f}\n"
         f"Current: ${current_price:,.2f}\n"
         f"Trend: {trend}\n"
@@ -81,8 +81,7 @@ async def send_final_signal(start_price):
         timeout=10,
     )
 
-    print(f"60s signal sent. ID: {result.message_id}", flush=True)
-    print(message, flush=True)
+    print(f"40s signal sent. ID: {result.message_id}", flush=True)
 
 
 async def run_bot():
@@ -96,7 +95,7 @@ async def run_bot():
 
         start_price = get_candle_open_price()
 
-        checkpoints = [270, 240, 210, 180, 150, 120, 90, 60]
+        checkpoints = [270, 240, 210, 180, 150, 120, 90, 60, 40]
 
         for checkpoint in checkpoints:
 
@@ -111,10 +110,10 @@ async def run_bot():
 
                 await asyncio.sleep(5)
 
-            if checkpoint == 60:
-                await send_final_signal(start_price)
-            else:
-                await send_countdown(start_price, checkpoint)
+            if checkpoint == 40:
+    await send_final_signal(start_price)
+else:
+    await send_countdown(start_price, checkpoint)
 
         print("Candle completed. Waiting for next candle...", flush=True)
 
