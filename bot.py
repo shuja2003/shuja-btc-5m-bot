@@ -12,7 +12,6 @@ from price import (
 
 from signals import get_signal
 
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
@@ -66,7 +65,7 @@ async def send_final_signal(start_price):
 
     message = (
         "₿ Shuja BTC 5M Signal\n\n"
-        "Time left: 30 seconds\n\n"
+        "Time left: 60 seconds\n\n"
         f"Start: ${start_price:,.2f}\n"
         f"Current: ${current_price:,.2f}\n"
         f"Trend: {trend}\n"
@@ -82,7 +81,7 @@ async def send_final_signal(start_price):
         timeout=10,
     )
 
-    print(f"30s signal sent. ID: {result.message_id}", flush=True)
+    print(f"60s signal sent. ID: {result.message_id}", flush=True)
     print(message, flush=True)
 
 
@@ -100,23 +99,27 @@ async def run_bot():
         checkpoints = [270, 240, 210, 180, 150, 120, 90, 60]
 
         for checkpoint in checkpoints:
-        while True:
-        now = get_binance_time()
-        seconds_left = candle_end - now
 
-        print(f"Seconds left: {seconds_left}", flush=True)
+            while True:
+                now = get_binance_time()
+                seconds_left = candle_end - now
 
-        if seconds_left <= checkpoint:
-            break
+                print(f"Seconds left: {seconds_left}", flush=True)
 
-        await asyncio.sleep(5)
+                if seconds_left <= checkpoint:
+                    break
 
-    if checkpoint == 60:
-        await send_final_signal(start_price)
-    else:
-        await send_countdown(start_price, checkpoint)
+                await asyncio.sleep(5)
 
-print("Candle completed. Waiting for next candle...", flush=True)
+            if checkpoint == 60:
+                await send_final_signal(start_price)
+            else:
+                await send_countdown(start_price, checkpoint)
+
+        print("Candle completed. Waiting for next candle...", flush=True)
+
+        while get_binance_time() < candle_end:
+            await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
