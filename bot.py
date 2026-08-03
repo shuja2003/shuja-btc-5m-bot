@@ -111,12 +111,12 @@ async def run_bot():
 
                 await asyncio.sleep(5)
 
-            if checkpoint == 60:
-    await send_final_signal(start_price)
-            else:
-                await send_countdown(start_price, checkpoint)
+                    if checkpoint == 60:
+            await send_final_signal(start_price)
+        else:
+            await send_countdown(start_price, checkpoint)
 
-        print("Candle completed. Waiting for next candle...", flush=True)
+    print("Candle completed. Waiting for next candle...", flush=True)
 
 
 if __name__ == "__main__":
