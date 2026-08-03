@@ -100,7 +100,7 @@ async def run_bot():
         checkpoints = [270, 240, 210, 180, 150, 120, 90, 60]
 
         for checkpoint in checkpoints:
-    while True:
+        while True:
         now = get_binance_time()
         seconds_left = candle_end - now
 
